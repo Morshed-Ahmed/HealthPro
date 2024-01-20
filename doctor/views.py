@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
-from .models import Doctor,Specialization
+from .models import Doctor,Specialization,Appointment,Review
 from .forms import ReviewForm,AppointmentForm
+from django.contrib.auth.models import User
+
 # Create your views here.
 def HomeView(request,specialization_name = None):
     data = Doctor.objects.all()
@@ -16,24 +18,44 @@ def HomeView(request,specialization_name = None):
 
 
 def DoctorDetails(request,doctor_id):
+    is_appointment = bool
     data = Doctor.objects.get(id = doctor_id)
-    form = ReviewForm()
+    review_data = Review.objects.filter(doctor = doctor_id)
+    print('re',review_data)
+    try:
+        profile = User.objects.get(username=request.user.username)
+        appoint = Appointment.objects.filter(patient= profile,doctor= data)
+        if len(appoint) > 0:
+            is_appointment = True
+        else:
+            is_appointment = False
+    except:
+        is_appointment = False
+
+        
+    
     if request.method == 'POST':
+        form = ReviewForm(request.POST)
         appointForm = AppointmentForm(request.POST)
         if appointForm.is_valid():
             appointment = appointForm.save(commit=False)
             appointment.patient = request.user
             appointment.doctor = data
             appointment.save()
+            return redirect('doctor_details',data.id)  
 
-            
-            return redirect('doctor_details')  
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.reviewer = request.user
+            review.doctor = data
+            review.save()
+            return redirect('doctor_details',data.id)
+
     else:
+        form = ReviewForm()
         appointForm = AppointmentForm()
- 
 
-
-    return render(request,'doctorDetails.html',{'data':data,'form': form,'appointForm':appointForm})
+    return render(request,'doctorDetails.html',{'data':data,'form': form,'appointForm':appointForm,'is_appointment':is_appointment,'review_data':review_data})
 
 def DoctorAppointment(request,doctor_id):
     doctor = Doctor.objects.get(id = doctor_id)

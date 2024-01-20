@@ -43,7 +43,24 @@
     </div>
   </div>
 
-  <div>{{form}}</div>
+  <div>
+    <div>
+      {% for re in review_data %}
+      <div class="card p-2 m-2">
+        <h4>{{re.reviewer.first_name}} {{re.reviewer.last_name}}</h4>
+        <p>{{re.body}}</p>
+        <div>{{re.rating}}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <form method="post" action="">
+      {% csrf_token %} {{form}}{{is_appointment}} {% if is_appointment %}
+      <button type="submit" class="btn btn-primary">Submit</button>
+      {% else %}
+      <button type="submit" class="btn btn-primary" disabled>Submit</button>
+      {% endif %}
+    </form>
+  </div>
 
   <!-- Modal -->
   <div

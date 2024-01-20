@@ -1,5 +1,70 @@
 {% extends "core/base.html" %} {% block body %}
 <div class="container">
-  <h1>profile</h1>
+  <div class="my-5">
+    {% if is_doctor %}
+    <h4>YOUR ROLE: Doctor</h4>
+    {% else %}
+    <h4>YOUR ROLE: Patient</h4>
+    {% endif %}
+    <hr />
+  </div>
+
+  <h5>All Appointments</h5>
+  {% if is_doctor %}
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Patient Name</th>
+        <th scope="col">Patient Email</th>
+        <th scope="col">Fee</th>
+        <th scope="col">Appointment Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in appoint_data %}
+      <tr>
+        <td>{{data.patient.first_name}} {{data.patient.last_name}}</td>
+        <td>{{data.patient.email}}</td>
+        <td>{{data.doctor.fee}}</td>
+        <td>
+          <span class="badge text-bg-secondary">
+            {{data.appointment_status}}</span
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Doctor Name</th>
+        <th scope="col">Specialization</th>
+        <th scope="col">Fee</th>
+        <th scope="col">Appointment Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in appoint_data %}
+      <tr>
+        <td>{{data.doctor}}</td>
+
+        {% for kk in data.doctor.specialization.all %}
+        <td>{{kk.name}}</td>
+        {% endfor %}
+        <td>{{data.doctor.fee}}</td>
+        <td>
+          <span class="badge text-bg-secondary">
+            {{data.appointment_status}}</span
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
 </div>
 {% endblock body %}

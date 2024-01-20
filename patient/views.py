@@ -1,43 +1,17 @@
-# from django.shortcuts import render
-# from . import forms
-
-# from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-# from django.contrib.sites.shortcuts import get_current_site
-# from django.template.loader import render_to_string
-# from django.core.mail import EmailMessage, send_mail, EmailMultiAlternatives
-
-
-from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from . import forms
-from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-
-
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import CreateView, UpdateView, DetailView, DetailView
-from django.views import View
-
-from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView, LogoutView
-
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-# Create your views here.
-
+from . import forms
 
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.utils.encoding import force_bytes, force_str
+from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage, send_mail, EmailMultiAlternatives
-from django.contrib.sites.shortcuts import get_current_site
-
 from django.contrib.auth.tokens import default_token_generator
 
+from doctor.models import Appointment,Doctor
 
 # Create your views here.
 def RegisterView(request):
@@ -47,15 +21,10 @@ def RegisterView(request):
             form = forms.RegisterForm(request.POST)
             if form.is_valid():
                 user = form.save()
-        
-                # user.is_active = False  # The user is inactive until activation
-                # user.save()
 
-      
                 token = default_token_generator.make_token(user)
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 confirm_link = f'https://healthpro.onrender.com/account/active/{uid}/{token}'
-
                 email_subject = "Confirm your email"
                 email_body = render_to_string(
                     'confirm_email.html',
@@ -66,13 +35,11 @@ def RegisterView(request):
                 )
                 email.attach_alternative(email_body, 'text/html')
                 email.send()
-
                 messages.success(
-                    request, 'Check your email and click on the link to activate your account.')
-                # return redirect('login')
+                    request, 'Check your email.')
                 return redirect('register')
             else:
-                messages.error(request, 'Please correct the error below.')
+                messages.error(request, 'Please correct information.')
         else:
             form = forms.RegisterForm()
 
@@ -144,4 +111,21 @@ def UserLogout(request):
     return redirect('home')
 
 def ProfileView(request):
-    return render(request,'profile.html')
+    is_doctor = bool
+
+    try:
+        kk = Doctor.objects.get(user= request.user)
+        print('kk',kk)
+        is_doctor = True
+    except:
+        is_doctor = False
+    print('pp',is_doctor)
+
+    if is_doctor:
+        appoint_data = Appointment.objects.filter(doctor = kk)
+        is_doctor = True
+    else:
+        appoint_data = Appointment.objects.filter(patient = request.user)
+        is_doctor = False
+    print(appoint_data)
+    return render(request,'profile.html',{'appoint_data':appoint_data,'is_doctor':is_doctor})

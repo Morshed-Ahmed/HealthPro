@@ -4,7 +4,7 @@ from .models import Review,Appointment
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['body','rating','doctor','reviewer']
+        fields = ['body','rating',]
 
 class AppointmentForm(forms.ModelForm):
     
