@@ -1,0 +1,86 @@
+{% extends "core/base.html" %} {% block body %}
+<div class="container my-5">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <img class="img-fluid" src="{{data.image.url}}" alt="" />
+        </div>
+        <div class="col-md-8">
+          <h5 class="card-title">
+            {{data.user.first_name}} {{data.user.last_name}}
+          </h5>
+          <p class="card-text">
+            This is a longer card with supporting text below as a natural
+            lead-in to additional content. This content is a little bit longer.
+          </p>
+          {% for ss in data.specialization.all %}
+          <div></div>
+          <span class="badge text-bg-secondary">{{ ss.name }}</span>
+          {% endfor %}
+          <h3 class="mt-2">${{data.fee}}</h3>
+          {% if user.is_authenticated %}
+          <button
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            class="btn btn-secondary"
+          >
+            Appointment
+          </button>
+
+          {% else %}
+          <button
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            class="btn btn-secondary"
+            disabled
+          >
+            Appointment
+          </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>{{form}}</div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Make Appointment
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <form action="" method="post">
+          <div class="modal-body">{% csrf_token %} {{appointForm}}</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}

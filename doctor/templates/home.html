@@ -1,0 +1,37 @@
+{% extends "core/base.html" %} {% block body %}
+<div class="container">
+  <a href="{% url 'sp_wise_product' 'all' %}" class="btn btn-light my-5">All</a>
+  {% for sp in specialization %}
+  <a href="{% url 'sp_wise_product' sp.name %}" class="btn btn-light my-5"
+    >{{sp.name}}</a
+  >
+  {% endfor %}
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for dt in data %}
+    <div class="col">
+      <div class="card">
+        <img src="{{dt.image.url}}" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h5 class="card-title">
+            {{dt.user.first_name}} {{dt.user.last_name}}
+          </h5>
+          <p class="card-text">
+            This is a longer card with supporting text below as a natural
+            lead-in to additional content. This content is a little bit longer.
+          </p>
+          {% for ss in dt.specialization.all %}
+          <div></div>
+
+          <span class="badge text-bg-secondary">{{ ss.name }}</span>
+          {% endfor %}
+          <br />
+          <a href="{% url 'doctor_details' dt.id %}">
+            <button class="btn btn-primary">Details</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock body %}
