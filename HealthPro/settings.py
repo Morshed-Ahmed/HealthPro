@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-eave_zqr9yp$hnrs-tplsokm+lm!+91hyx-#guir6^qfw@p*k%
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://healthpro.onrender.com/','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://healthpro.onrender.com','https://*.127.0.0.1']
 
 
 # Application definition
