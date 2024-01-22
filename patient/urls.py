@@ -7,4 +7,5 @@ urlpatterns = [
     path('active/<uid64>/<token>/', views.activate, name = 'activate'),
     path('logout/',views.UserLogout,name = 'logout'),
     path('profile/',views.ProfileView,name = 'profile'),
+    path('cancel_appointment/<int:appointment_id>/',views.CancelAppointment,name = 'cancel_appointment'),
 ]

@@ -36,7 +36,7 @@ def RegisterView(request):
                 email.attach_alternative(email_body, 'text/html')
                 email.send()
                 messages.success(
-                    request, 'Check your email.')
+                    request, ' Please check your email.')
                 return redirect('register')
             else:
                 messages.error(request, 'Please correct information.')
@@ -61,7 +61,7 @@ def activate(request, uid64, token):
         # patients = models.Patient.objects.get(user=user)
         # patients.is_patient = True
         # patients.save()
-        # messages.success(request,'Email verify Successful')
+        messages.success(request,'Email verify Successful, Please Login')
 
         return redirect('login')
     else:
@@ -92,6 +92,8 @@ def LoginView(request):
                     # messages.success(request, 'Logged In Successfully')
                     messages.info(
                         request, f"You are now logged in as {username}")
+                    
+                    return redirect('profile')
 
                     # Redirect to the appropriate page after login
                 else:
@@ -107,19 +109,19 @@ def LoginView(request):
 
 def UserLogout(request):
     logout(request)
-    # messages.info(request, "Logged Out Successfully")
-    return redirect('home')
+    messages.info(request, "LogOut Successfully")
+    return redirect('login')
 
 def ProfileView(request):
     is_doctor = bool
 
     try:
         kk = Doctor.objects.get(user= request.user)
-        print('kk',kk)
+        # print('kk',kk)
         is_doctor = True
     except:
         is_doctor = False
-    print('pp',is_doctor)
+    # print('pp',is_doctor)
 
     if is_doctor:
         appoint_data = Appointment.objects.filter(doctor = kk)
@@ -127,5 +129,15 @@ def ProfileView(request):
     else:
         appoint_data = Appointment.objects.filter(patient = request.user)
         is_doctor = False
-    print(appoint_data)
+    # print(appoint_data)
     return render(request,'profile.html',{'appoint_data':appoint_data,'is_doctor':is_doctor})
+
+
+def CancelAppointment(request,appointment_id):
+    print('ll',appointment_id)
+    appoint = Appointment.objects.get(id = appointment_id)
+    print('data',appoint.doctor)
+    appoint.delete()
+    messages.info(request, "Appointment deleted Successfully")
+    
+    return redirect('profile')

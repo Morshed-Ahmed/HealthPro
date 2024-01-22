@@ -1,4 +1,7 @@
-{% extends "core/base.html" %} {% block body %}
+{% extends "core/base.html" %} {% load crispy_forms_tags %} {% block body %}
+<div></div>
+{% load crispy_forms_tags %}
+
 <div class="container my-5">
   <div class="card">
     <div class="card-body">
@@ -13,38 +16,52 @@
           <p class="card-text">
             This is a longer card with supporting text below as a natural
             lead-in to additional content. This content is a little bit longer.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse
+            perferendis, magnam est, perspiciatis odit quam minima facere
+            eveniet saepe,
           </p>
           {% for ss in data.specialization.all %}
           <div></div>
           <span class="badge text-bg-secondary">{{ ss.name }}</span>
           {% endfor %}
-          <h3 class="mt-2">${{data.fee}}</h3>
-          {% if user.is_authenticated %}
-          <button
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            class="btn btn-secondary"
-          >
-            Appointment
-          </button>
 
-          {% else %}
-          <button
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            class="btn btn-secondary"
-            disabled
-          >
-            Appointment
-          </button>
-          {% endif %}
+          <div class="d-flex justify-content-between">
+            <h5 class="mt-2">${{data.fee}}</h5>
+            {% if user.is_authenticated %}
+            <button
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              class="btn btn-info text-light fw-semibold"
+            >
+              Book Appointment
+            </button>
+
+            {% else %}
+            <p
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Please login then Appointment"
+            >
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                class="btn btn-info text-light fw-semibold"
+                disabled
+              >
+                Book Appointment
+              </button>
+            </p>
+
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  {% comment %} Reviews {% endcomment %}
   <div>
-    <div>
+    <div class="my-5">
       {% for re in review_data %}
       <div class="card p-2 m-2">
         <h4>{{re.reviewer.first_name}} {{re.reviewer.last_name}}</h4>
@@ -54,10 +71,27 @@
       {% endfor %}
     </div>
     <form method="post" action="">
-      {% csrf_token %} {{form}}{{is_appointment}} {% if is_appointment %}
+      {% csrf_token %}
+      <!-- {{form | crispy }} -->
+      {% for fm in form%}
+      <div>{{fm.label_tag}} {{fm}} {{fm.errors|striptags}}</div>
+      {% endfor %}
+      <div></div>
+      <br />
+      {% if is_appointment %}
+
       <button type="submit" class="btn btn-primary">Submit</button>
+
       {% else %}
-      <button type="submit" class="btn btn-primary" disabled>Submit</button>
+      <p
+        class="d-inline"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        data-bs-title="If you have an appointment then you can give a review"
+        disabled
+      >
+        <button type="submit" class="btn btn-primary" disabled>Submit</button>
+      </p>
       {% endif %}
     </form>
   </div>
@@ -83,8 +117,14 @@
             aria-label="Close"
           ></button>
         </div>
-        <form action="" method="post">
-          <div class="modal-body">{% csrf_token %} {{appointForm}}</div>
+        <form action="" method="post" novalidate>
+          <div class="modal-body">
+            {% csrf_token %}
+            <!-- {{appointForm | crispy }} -->
+            {% for fm in appointForm%}
+            <div>{{fm.label_tag}} {{fm}} {{fm.errors|striptags}}</div>
+            {% endfor %}
+          </div>
           <div class="modal-footer">
             <button
               type="button"
