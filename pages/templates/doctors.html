@@ -1,0 +1,75 @@
+{% extends "core/base.html" %} {% block body %}
+<div class="container">
+  <div class="my-5">
+    <h2>Find Your Doctor</h2>
+    <div class="d-flex flex-wrap gap-3 my-4">
+      <a href="{% url 'sp_wise_doctor' 'all' %}" class="btn btn-light fs-5">
+        All</a
+      >
+      {% for sp in specialization %}
+      <a href="{% url 'sp_wise_doctor' sp.name %}" class="btn btn-light fs-5">
+        {{sp.name}}</a
+      >
+      {% endfor %}
+    </div>
+  </div>
+  <div class="mb-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for dt in data %}
+      <div class="col">
+        <div class="card">
+          <a href="{% url 'doctor_details' dt.id %}">
+            <img src="{{dt.image.url}}" class="card-img-top" alt="..." />
+          </a>
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <a
+                class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                href="{% url 'doctor_details' dt.id %}"
+              >
+                <h5 class="card-title hover-text-primary">
+                  Dr. {{dt.user.first_name}} {{dt.user.last_name}}
+                </h5>
+              </a>
+              <span class="badge text-bg-secondary fs-5">${{dt.fee}}</span>
+            </div>
+
+            {% for ss in dt.specialization.all %}
+            <div></div>
+
+            <span class="font-monospace text-secondary">{{ ss.name }}</span>
+            {% endfor %}
+            <br />
+
+            <div class="d-flex align-items-center gap-2 mt-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-geo-alt"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"
+                />
+                <path
+                  d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
+                />
+              </svg>
+              <span class="fw-semibold text-dark-emphasis">Georgia,USA</span>
+            </div>
+
+            {% comment %}
+            <a href="{% url 'doctor_details' dt.id %}">
+              <button class="btn btn-primary">Details</button>
+            </a>
+            {% endcomment %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock body %}

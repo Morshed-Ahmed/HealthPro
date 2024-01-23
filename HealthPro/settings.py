@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'core',
     'doctor',
     'patient',
+    'pages'
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

@@ -8,6 +8,7 @@ from django.contrib import messages
 def HomeView(request,specialization_name = None):
     data = Doctor.objects.all()
     specialization = Specialization.objects.all()
+    review = Review.objects.all()
     if specialization_name == 'all':
         data = Doctor.objects.all()
     elif specialization_name is not None:
@@ -15,7 +16,7 @@ def HomeView(request,specialization_name = None):
         # print(data)
         data = Doctor.objects.filter(specialization = bt)
         # print(data)
-    return render(request , 'home.html',{'data': data,'specialization':specialization})
+    return render(request , 'home.html',{'data': data,'specialization':specialization,'review':review})
 
 
 def DoctorDetails(request,doctor_id):

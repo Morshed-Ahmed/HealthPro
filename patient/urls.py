@@ -8,4 +8,5 @@ urlpatterns = [
     path('logout/',views.UserLogout,name = 'logout'),
     path('profile/',views.ProfileView,name = 'profile'),
     path('cancel_appointment/<int:appointment_id>/',views.CancelAppointment,name = 'cancel_appointment'),
+    path('update_appointment/<int:appointment_id>/',views.UpdateAppointment,name = 'update_appointment'),
 ]

@@ -57,27 +57,11 @@ def activate(request, uid64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-
-        # patients = models.Patient.objects.get(user=user)
-        # patients.is_patient = True
-        # patients.save()
         messages.success(request,'Email verify Successful, Please Login')
-
         return redirect('login')
     else:
         return redirect('register')
 
-
-# def RegisterView(request):
-#     if request.method == 'POST':
-#         form = forms.RegisterForm(request.POST)
-#         if form.is_valid():
-#             messages.success(request, 'Account created successfully')
-#             # form.save()
-#             print(form.cleaned_data)
-#     else:
-#         form = forms.RegisterForm()
-#     return render(request, 'register.html', {'form': form})
 def LoginView(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
@@ -89,19 +73,16 @@ def LoginView(request):
                 if user is not None:
                     login(request, user)
 
-                    # messages.success(request, 'Logged In Successfully')
                     messages.info(
                         request, f"You are now logged in as {username}")
-                    
                     return redirect('profile')
 
-                    # Redirect to the appropriate page after login
                 else:
-                    messages.error(request, 'Invalid username or password')
-
+                    messages.info(request, 'Invalid username or password')
+            else:
+                messages.info(request, 'Invalid username or password')
         else:
             form = AuthenticationForm()
-
         return render(request, 'login.html', {'form': form,})
     else:
         return redirect('home')
@@ -114,7 +95,6 @@ def UserLogout(request):
 
 def ProfileView(request):
     is_doctor = bool
-
     try:
         kk = Doctor.objects.get(user= request.user)
         # print('kk',kk)
@@ -130,14 +110,53 @@ def ProfileView(request):
         appoint_data = Appointment.objects.filter(patient = request.user)
         is_doctor = False
     # print(appoint_data)
-    return render(request,'profile.html',{'appoint_data':appoint_data,'is_doctor':is_doctor})
+    updateds = forms.AppointmentStatusForm()
+
+
+    return render(request,'profile.html',{'appoint_data':appoint_data,'is_doctor':is_doctor,'updateds':updateds})
 
 
 def CancelAppointment(request,appointment_id):
-    print('ll',appointment_id)
     appoint = Appointment.objects.get(id = appointment_id)
-    print('data',appoint.doctor)
     appoint.delete()
     messages.info(request, "Appointment deleted Successfully")
-    
     return redirect('profile')
+
+# def UpdateAppointment(request,appointment_id):
+#     print('id',appointment_ids)
+#     appoint = Appointment.objects.get(id = appointment_ids)
+#     selected_status = request.POST.get('selected_status')
+#     print('stt',selected_status)
+
+#     if request.method == 'POST':
+#         # Get the selected status from the form data
+#         selected_status = request.POST.get('selected_status')
+
+#         if selected_status:
+#             appoint.appointment_status = selected_status
+#             appoint.save()
+#             messages.success(request, 'Appointment status updated successfully!')
+#         else:
+#             messages.error(request, 'Error updating appointment status. Please provide a valid status.')
+
+
+#     return redirect('profile')
+
+def UpdateAppointment(request,appointment_id):
+    # print(appointment_id)
+    appoint = Appointment.objects.get(id = appointment_id)
+
+    if request.method == 'POST':
+        form = forms.AppointmentStatusForm(request.POST)
+        if form.is_valid():
+            status = form.cleaned_data['appointment_status']
+            appoint.appointment_status = status
+            appoint.save()
+            messages.success(request, 'Appointment status updated successfully!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Error updating appointment status. Please provide a valid status.')
+    else:
+        form = forms.AppointmentStatusForm()
+
+    return render(request,'confirm_appoint_update.html',{'appoint':form})

@@ -1,0 +1,25 @@
+{% extends "core/base.html" %} {% block body %} {% load crispy_forms_tags %}
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-4 mx-auto">
+      <div class="card">
+        <div class="card-body">
+          <form method="post" action="">
+            {% csrf_token %}
+            <!-- {{appoint | crispy }} -->
+            {% for fm in appoint%}
+            <div>{{fm.label_tag}} {{fm}} {{fm.errors|striptags}}</div>
+            {% endfor %}
+            <div></div>
+            <br />
+
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div></div>
+</div>
+{% endblock body %}
