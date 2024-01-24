@@ -6,23 +6,22 @@ Your objective is to design and develop a hospital management website tailored t
 
 1. Patient Registration and Authentication: 
 Implement a user registration, login and logout system.
-
 When doing registration, the user will get an email and after clicking the email verification link his/her account will be activated and then can login to his/her account.
 
-3. Appointment and Reviews: (25 Marks)
+3. Appointment and Reviews: 
 Patients can take appointments for a particular doctor and select a preferred time for that doctor’s available time.
 After taking a particular appointment under a doctor, a patient can give a review for that particular doctor.
 
-4. Doctor Profile Page: (20 Marks)
+4. Doctor Profile Page: 
 Display all patient records associated with a specific doctor on their profile page.
 Allow doctors to easily review and manage their patients' information like edit, delete
 .
-5. Data Display: (15 Marks)
+5. Data Display: 
 Create a homepage that showcases all the doctors name, image, expertise and view details button.
 Patients can view doctor details on another page. 
 Can filter doctors by their expertise
 
-Deployment and Submission: (10 Marks)
+Deployment and Submission: 
 Deploy the functional hospital management website on a reliable hosting platform.
-Admin Dashboard : (10 Marks)
+Admin Dashboard : 
 Create an admin dashboard for admin.
