@@ -3,8 +3,9 @@ from doctor.models import Doctor,Specialization,Review
 
 # Create your views here.
 
-# def DoctorsView(request):
-#     return render(request, 'doctors.html')
+def custom_404(request, exception=None):
+    return render(request, '404.html', status=404)
+
 
 def DoctorsView(request,specialization_name = None):
     data = Doctor.objects.all()

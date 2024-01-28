@@ -15,15 +15,30 @@
           <div>
             <button class="btn btn-primary btn-lg">Start a Consult</button>
           </div>
-          <form class="d-flex mt-5" role="search">
+
+          <div class="input-group flex-nowrap mt-3">
+            <span class="input-group-text" id="addon-wrapping">
+              <i class="bi bi-search"></i>
+            </span>
             <input
-              class="form-control me-2 p-2"
-              type="search"
-              placeholder="Search doctor"
-              aria-label="Search"
+              class="form-control p-2"
+              list="datalistOptions"
+              id="exampleDataList"
+              placeholder="Doctor search..."
+              aria-describedby="addon-wrapping"
             />
-            <button class="btn btn-primary" type="submit">Search</button>
-          </form>
+          </div>
+          <datalist id="datalistOptions">
+            {% for dt in data %}
+            <a href="{% url 'doctor_details' dt.id %}">
+              <option
+                value="{{dt}}"
+                data-url="{% url 'doctor_details' dt.id %}"
+              ></option
+            ></a>
+
+            {% endfor %}
+          </datalist>
         </div>
       </div>
       <div class="col-md-6">
@@ -540,4 +555,26 @@
     </div>
   </div>
 </div>
+
+{% comment %} FOR DOCTOR SEARCH BAR JAVASCRIPT CODE {% endcomment %}
+<script>
+  document
+    .getElementById("exampleDataList")
+    .addEventListener("input", function () {
+      var input = this.value;
+      var options = document
+        .getElementById("datalistOptions")
+        .getElementsByTagName("option");
+
+      for (var i = 0; i < options.length; i++) {
+        var optionValue = options[i].value;
+        var optionUrl = options[i].getAttribute("data-url");
+        if (optionValue === input) {
+          // Redirect to the doctor details page
+          window.location.href = optionUrl;
+          break;
+        }
+      }
+    });
+</script>
 {% endblock body %}
